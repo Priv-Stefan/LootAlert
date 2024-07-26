@@ -1,0 +1,9 @@
+## Interface: 70100
+## Title: LootAlert
+## Notes: Optimized Fury Sequence
+## Author: Pnf
+## Version 0.1
+## Lootalert.lua
+## SavedVariablesPerCharacter: lola_variables
+
+Lootalert.xml

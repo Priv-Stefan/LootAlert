@@ -1,0 +1,236 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/../../../BlizzardInterfaceCode/UI.xsd">
+    <Script File="lootalert.lua" />
+
+    <Frame name="ListElementTemplate" virtual="true">
+        <Size x="240" y="25" />
+        <Frames>
+            <Button name="$parent_btnDel" inherits="UIPanelButtonTemplate" parentkey="btnDel"
+                text="Del">
+                <Size x="60" y="21" />
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset x="-2" y="-2" />
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick function="lola_btnDel_click" />
+                </Scripts>
+            </Button>
+            <Frame name="$parent_Frame" parentKey="textureframe">
+                <Size x="20" y="20" />
+                <Anchors>
+                    <Anchor point="LEFT" relativePoint="LEFT"></Anchor>
+                </Anchors>
+            </Frame>
+        </Frames>
+        <Layers>
+            <Layer level="BACKGROUND" setAllPoints="true">
+                <Texture name="$parentbackIcon" parentKey="icon">
+                    <Color r="0.0" g="0.0" b="0.0" a="1.0" />
+                </Texture>
+            </Layer>
+            <Layer level="BORDER">
+                <Texture name="$parent_Icon" parentKey="itemtexture" parent="$parent">
+                    <Size x="20" y="20" />
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset x="4" y="0" />
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+
+            </Layer>
+
+            <Layer level="BORDER">
+                <FontString name="$parent_item" parentKey="item" inherits="SystemFont_Shadow_Small"
+                    text="" maxLines="2" nonspacewrap="true" justifyH="LEFT">
+                    <Size x="150" y="20" />
+                    <Anchors>
+                        <Anchor point="LEFT" relativeto="$parent_Icon" relativepoint="RIGHT">
+                            <Offset x="4" y="0" />
+                        </Anchor>
+                        <Anchor point="RIGHT" relativeto="$parent_btnDel" relativepoint="LEFT">
+                            <Offset x="4" y="0" />
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+
+    <Frame name="LoLaMain" parent="UIParent"  movable="true" enableMouse="true" >
+        <Size>
+            <AbsDimension x="288" y="296" />
+        </Size>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+            <BackgroundInsets>
+                <AbsInset left="4" right="4" top="4" bottom="4" />
+            </BackgroundInsets>
+            <TileSize>
+                <AbsValue val="16" />
+            </TileSize>
+            <EdgeSize>
+                <AbsValue val="16" />
+            </EdgeSize>
+        </Backdrop>
+        <Scripts>
+            <OnMouseDown function="lola_start_moving" />
+            <OnMouseUp function="lola_savePosition" />
+            <OnLoad function="lola_onLoad" />
+            <OnEvent function="lola_OnEvent" />
+        </Scripts>
+        <Frames>
+            <EditBox name="edtWish" parent="LoLaMain" inherits="InputBoxTemplate">
+                <Size x="170" y="20" />
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="12" y="8" />
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        self:SetAutoFocus(false)
+                    </OnLoad>
+                </Scripts>
+            </EditBox>
+            <Button name="btnAdd" inherits="UIPanelButtonTemplate" text="Add">
+                <Size x="60" y="21" />
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeto="edtWish" relativepoint="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="0" y="0" />
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                    </OnLoad>
+                    <OnClick function="lola_btnAdd_click" />
+                </Scripts>
+            </Button>
+            <Button name="btnScan" inherits="UIPanelButtonTemplate" text="Scan">
+                <Size x="40" y="21" />
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeto="btnAdd" relativepoint="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="0" y="0" />
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                    </OnLoad>
+                    <OnClick function="lola_btnscan_click" />
+                </Scripts>
+            </Button>
+
+            <Button name="$parent_Close" parentKey="close" inherits="UIPanelCloseButton">
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset x="0" y="0" />
+                    </Anchor>
+                </Anchors>
+            </Button>
+
+            <Frame name="lolascrollframe" parent="LoLaMain">
+                <Size x="250" y="0" />
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="10" y="-24" />
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" relativeto="edtWish">
+                        <Offset>
+                            <AbsDimension x="4" y="4" />
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-30" y="-4" />
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+                    <BackgroundInsets>
+                        <AbsInset left="4" right="4" top="4" bottom="4" />
+                    </BackgroundInsets>
+                    <TileSize>
+                        <AbsValue val="16" />
+                    </TileSize>
+                    <EdgeSize>
+                        <AbsValue val="16" />
+                    </EdgeSize>
+                </Backdrop>
+        
+                <!-- <Layers>
+                    <Layer level="BORDER" setAllPoints="true">
+                        <Texture name="lolascrollframeback">
+                            <Color r="0.0" g="0.0" b="0.0" a="1.0" />
+                        </Texture>
+                    </Layer>
+                </Layers> -->
+            </Frame>
+
+            <Slider name="$parent_VSlider" parent="LoLaMain" parentkey="slider"
+                orientation="VERTICAL">
+                <Size x="25" y="25" />
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeto="lolascrollframe" />
+                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT"
+                        relativeTo="lolascrollframe" />
+                </Anchors>
+                <Backdrop edgeFile="Interface\Buttons\UI-SliderBar-Border"
+                    bgFile="Interface\Buttons\UI-SliderBar-Background" tile="true">
+                    <EdgeSize>
+                        <AbsValue val="8" />
+                    </EdgeSize>
+                    <TileSize>
+                        <AbsValue val="8" />
+                    </TileSize>
+                    <BackgroundInsets>
+                        <AbsInset left="3" right="3" top="6" bottom="6" />
+                    </BackgroundInsets>
+                </Backdrop>
+                <Scripts>
+                    <OnLoad function="lola_slider_onload" />
+                    <OnValueChanged function="lola_slider_onValueChanged" />
+                </Scripts>
+
+                <ThumbTexture name="$parentThumbTexture"
+                    file="Interface\Buttons\UI-ScrollBar-Knob">
+                    <Size x="25" y="25" />
+                </ThumbTexture>
+            </Slider>
+        </Frames>
+        <Layers>
+			<Layer level="ARTWORK">
+				<Texture name="$parenttitle" file="Interface\DialogFrame\UI-DialogBox-Header">
+					<Size>
+						<AbsDimension x="400" y="64"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="12"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString inherits="GameFontNormal" text="Wunschliste">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parenttitle">
+							<Offset>
+								<AbsDimension x="0" y="-13"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+
+    </Frame>
+</Ui>
