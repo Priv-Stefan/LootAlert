@@ -1,6 +1,6 @@
 ## Interface: 70100
 ## Title: LootAlert
-## Notes: Optimized Fury Sequence
+## Notes: A simple Wishlist
 ## Author: Pnf
 ## Version 0.1
 ## Lootalert.lua
