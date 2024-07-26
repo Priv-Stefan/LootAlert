@@ -19,11 +19,6 @@ local function debug(...)
 	end
 end
 
-local function printparams(...)
-	for i = 1, select('#', ...) do
-		print(select(i, ...))
-	end
-end
 local function set_slider_max()
 	if #lola_variables.wishes > max_lines then
 		LoLaMain.slider:SetMinMaxValues(1, #lola_variables.wishes - max_lines + 1)
@@ -34,21 +29,20 @@ local function set_slider_max()
 end
 
 local function scan()
-	print("Scanning")
+	debug("Scanning")
 	itemdb = nil
 	itemdb = {}
 	for i = 40000, 55000 do
 		local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice =
-		GetItemInfo(i)
+			GetItemInfo(i)
 		if name ~= nil then
-			debug(name)
 			item = {}
 			item["name"] = name
 			item["id"] = i
 			table.insert(itemdb, item)
 		end
 	end
-	debug("Scanning done ", itemdb[5651])
+	debug("Scanning done")
 end
 
 local function show_items()
@@ -61,6 +55,7 @@ local function show_items()
 			local name, link, quality, iLevel, reqLevel, class, subclass,
 			maxStack, equipSlot, texture, vendorPrice = GetItemInfo(lola_variables.wishes[i + start_index - 1]["itemid"])
 			listframes[i].item:SetText(link)
+			listframes[i].link = link
 			listframes[i]:Show()
 			listframes[i].itemtexture:Show()
 			listframes[i].itemtexture:SetTexture(texture)
@@ -74,31 +69,28 @@ end
 
 function lola_btnAdd_click(arg1)
 	local itemname = edtWish:GetText()
-
-
 	local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice
 	local id = tonumber(itemname)
 	if id ~= nil then
 		name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(
-		id)
+			id)
 	else
 		name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice = GetItemInfo(
-		itemname)
+			itemname)
 	end
 
 	if name == nil then
 		for i = 1, #itemdb do
 			if string.find(itemdb[i]['name'], itemname) then
 				name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice =
-				GetItemInfo(itemdb[i]['id'])
+					GetItemInfo(itemdb[i]['id'])
 				break;
 			end
 		end
 	end
 
 	if name ~= nil then
-		local itemNum = tonumber(link:match("|Hitem:(%d+):"))
-		print(link, itemNum)
+		local itemNum = tonumber(link:match("|Hitem:(%d+):"))		
 		local w = {}
 		w['itemid'] = itemNum
 		table.insert(lola_variables.wishes, w)
@@ -139,6 +131,22 @@ local function load_variables()
 	show_items()
 	set_slider_max()
 end
+
+-- -----------------------------------------------------------------
+function lola_texture_OnEnter(self, motion)
+	if self.link then
+		GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
+		GameTooltip:SetHyperlink(self.link)
+		GameTooltip:Show()
+	end
+end
+
+-- -----------------------------------------------------------------
+function lola_texture_OnLeave(self, motion)
+	GameTooltip:Hide()
+end
+
+-- -----------------------------------------------------------------
 
 function lola_OnEvent(self, event, ...)
 	-- print(event)
