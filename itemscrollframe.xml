@@ -1,0 +1,134 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    
+    <Frame name="ListElementTemplate" virtual="true">
+        <Size x="240" y="25" />
+        <Frames>
+            <Button name="$parent_btnDel" inherits="UIPanelButtonTemplate" parentkey="btnDel"
+                text="Del">
+                <Size x="60" y="21" />
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset x="-2" y="-2" />
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick function="lola_btnDel_click" />
+                </Scripts>
+            </Button>
+            <Frame name="$parent_Frame" parentKey="textureframe">
+                <Size x="20" y="20" />
+                <Anchors>
+                    <Anchor point="LEFT" relativePoint="LEFT"></Anchor>
+                </Anchors>
+            </Frame>
+        </Frames>
+        <Layers>
+            <Layer level="BACKGROUND" setAllPoints="true">
+                <Texture name="$parentbackIcon" parentKey="icon">
+                    <Color r="0.0" g="0.0" b="0.0" a="1.0" />
+                </Texture>
+            </Layer>
+            <Layer level="BORDER">
+                <Texture name="$parent_Icon" parentKey="itemtexture" parent="$parent">
+                    <Size x="20" y="20" />
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset x="4" y="0" />
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+
+            <Layer level="BORDER">
+                <FontString name="$parent_item" parentKey="item" inherits="SystemFont_Shadow_Small"
+                    text="" maxLines="2" nonspacewrap="true" justifyH="LEFT">
+                    <Size x="150" y="20" />
+                    <Anchors>
+                        <Anchor point="LEFT" relativeto="$parent_Icon" relativepoint="RIGHT">
+                            <Offset x="4" y="0" />
+                        </Anchor>
+                        <Anchor point="RIGHT" relativeto="$parent_btnDel" relativepoint="LEFT">
+                            <Offset x="4" y="0" />
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnEnter function="lola_texture_OnEnter" />
+            <OnLeave function="lola_texture_OnLeave" />
+        </Scripts>
+    </Frame>
+
+    <Frame name="ItemScrollFrameTemplate" virtual="true">
+        <Size x="275" y="235" />
+
+        <Frames>
+            <Frame name="$parent_itemarea" parentkey="main">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0" />
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-26" y="0" />
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                    edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+                    <BackgroundInsets>
+                        <AbsInset left="4" right="4" top="4" bottom="4" />
+                    </BackgroundInsets>
+                    <TileSize>
+                        <AbsValue val="16" />
+                    </TileSize>
+                    <EdgeSize>
+                        <AbsValue val="16" />
+                    </EdgeSize>
+                </Backdrop>
+
+                <!-- <Layers>
+                <Layer level="BORDER" setAllPoints="true">
+                    <Texture name="lolascrollframeback">
+                        <Color r="0.0" g="0.0" b="0.0" a="1.0" />
+                    </Texture>
+                </Layer>
+            </Layers> -->
+            </Frame>
+
+            <Slider name="$parent_vslider" parentkey="slider"
+                orientation="VERTICAL">
+                <Size x="25" y="25" />
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeto="$parent_itemarea" />
+                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT"
+                        relativeTo="$parent_itemarea" />
+                </Anchors>
+                <Backdrop edgeFile="Interface\Buttons\UI-SliderBar-Border"
+                    bgFile="Interface\Buttons\UI-SliderBar-Background" tile="true">
+                    <EdgeSize>
+                        <AbsValue val="8" />
+                    </EdgeSize>
+                    <TileSize>
+                        <AbsValue val="8" />
+                    </TileSize>
+                    <BackgroundInsets>
+                        <AbsInset left="3" right="3" top="6" bottom="6" />
+                    </BackgroundInsets>
+                </Backdrop>
+                <Scripts>
+                    <OnLoad function="lola_slider_onload" />
+                    <OnValueChanged function="lola_slider_onValueChanged" />
+                </Scripts>
+
+                <ThumbTexture name="$parentThumbTexture"
+                    file="Interface\Buttons\UI-ScrollBar-Knob">
+                    <Size x="25" y="25" />
+                </ThumbTexture>
+            </Slider>
+        </Frames>
+    </Frame>
+</Ui>

@@ -6,4 +6,6 @@
 ## Lootalert.lua
 ## SavedVariablesPerCharacter: lola_variables
 
+itemscrollframe.xml
 Lootalert.xml
+Lootalert.lua

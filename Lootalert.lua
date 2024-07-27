@@ -4,10 +4,13 @@ lola_variables =
 	Xpos = 0,
 	Ypos = 0,
 	wishes = {},
+	loot={}
 }
-local start_index = 1
+local wish_start_index = 1
+local loot_start_index = 1
 local max_lines = 9
 local listframes = {}
+local listlootedframes = {}
 local itemdb = {}
 
 local function debug(...)
@@ -21,12 +24,67 @@ end
 
 local function set_slider_max()
 	if #lola_variables.wishes > max_lines then
-		LoLaMain.slider:SetMinMaxValues(1, #lola_variables.wishes - max_lines + 1)
+		lola_wish_frame.slider:SetMinMaxValues(1, #lola_variables.wishes - max_lines + 1)
 		--sprint(#lola_variables.wishes-max_lines)
 	else
-		LoLaMain.slider:SetMinMaxValues(1, 1)
+		lola_wish_frame.slider:SetMinMaxValues(1, 1)
 	end
 end
+
+local function set_loot_slider_max()
+	if #lola_variables.loot > max_lines then
+		lola_looted.slider:SetMinMaxValues(1, #lola_variables.loot - max_lines + 1)
+		--sprint(#lola_variables.wishes-max_lines)
+	else
+		lola_looted.slider:SetMinMaxValues(1, 1)
+	end
+end
+
+local function show_loot()
+	if listlootedframes[1] == nil then
+		return
+	end
+	local index = 1
+	for i = 1, max_lines do
+		if i + loot_start_index - 1 <= #lola_variables.loot then
+			local name, link, quality, iLevel, reqLevel, class, subclass,
+			maxStack, equipSlot, texture, vendorPrice = GetItemInfo(lola_variables.loot[i + loot_start_index - 1]['id'])
+			listlootedframes[i].item:SetText( lola_variables.loot[i + loot_start_index - 1]['count'] .. " " .. link)
+			listlootedframes[i].link = link
+			listlootedframes[i]:Show()
+			listlootedframes[i].itemtexture:Show()
+			listlootedframes[i].itemtexture:SetTexture(texture)
+		else
+			listlootedframes[i].item:SetText("")
+			listlootedframes[i].itemtexture:Hide()
+			listlootedframes[i]:Hide()
+		end
+	end
+
+end
+
+-- local function show_loot()
+-- 	if listlootedframes[1] == nil then
+-- 		return
+-- 	end
+-- 	local index = 1
+-- 	for i = 1, max_lines do
+-- 		if i + wish_start_index - 1 <= #lola_variables.wishes then
+-- 			local name, link, quality, iLevel, reqLevel, class, subclass,
+-- 			maxStack, equipSlot, texture, vendorPrice = GetItemInfo(itemdb[i + loot_start_index - 1]["id"])
+-- 			listlootedframes[i].item:SetText(link)
+-- 			listlootedframes[i].link = link
+-- 			listlootedframes[i]:Show()
+-- 			listlootedframes[i].itemtexture:Show()
+-- 			listlootedframes[i].itemtexture:SetTexture(texture)
+-- 		else
+-- 			listlootedframes[i].item:SetText("")
+-- 			listlootedframes[i].itemtexture:Hide()
+-- 			listlootedframes[i]:Hide()
+-- 		end
+-- 	end
+-- end
+
 
 local function scan()
 	debug("Scanning")
@@ -36,12 +94,21 @@ local function scan()
 		local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice =
 			GetItemInfo(i)
 		if name ~= nil then
-			item = {}
-			item["name"] = name
-			item["id"] = i
-			table.insert(itemdb, item)
+			if quality > 3 then
+				item = {}
+				item["name"] = name
+				item["id"] = i
+				table.insert(itemdb, item)
+			end
 		end
 	end
+	if #itemdb > max_lines then
+		lola_looted.slider:SetMinMaxValues(1, #itemdb- max_lines + 1)
+	else
+		lola_looted.slider:SetMinMaxValues(1, 1)
+	end
+
+	show_loot()
 	debug("Scanning done")
 end
 
@@ -51,9 +118,9 @@ local function show_items()
 	end
 	local index = 1
 	for i = 1, max_lines do
-		if i + start_index - 1 <= #lola_variables.wishes then
+		if i + wish_start_index - 1 <= #lola_variables.wishes then
 			local name, link, quality, iLevel, reqLevel, class, subclass,
-			maxStack, equipSlot, texture, vendorPrice = GetItemInfo(lola_variables.wishes[i + start_index - 1]["itemid"])
+			maxStack, equipSlot, texture, vendorPrice = GetItemInfo(lola_variables.wishes[i + wish_start_index - 1]["itemid"])
 			listframes[i].item:SetText(link)
 			listframes[i].link = link
 			listframes[i]:Show()
@@ -66,6 +133,7 @@ local function show_items()
 		end
 	end
 end
+
 
 function lola_btnAdd_click(arg1)
 	local itemname = edtWish:GetText()
@@ -96,8 +164,8 @@ function lola_btnAdd_click(arg1)
 		table.insert(lola_variables.wishes, w)
 		if #lola_variables.wishes > max_lines then
 			set_slider_max()
-			start_index = #lola_variables.wishes - max_lines + 1
-			LoLaMain.slider:SetValue(start_index)
+			wish_start_index = #lola_variables.wishes - max_lines + 1
+			lola_wish_frame.slider:SetValue(wish_start_index)
 		else
 			show_items()
 		end
@@ -113,9 +181,18 @@ end
 
 function lola_btnDel_click(self)
 	local idx = tonumber(self:GetName():match('lolawish_(%d+)_'))
-	table.remove(lola_variables.wishes, start_index + idx - 1)
-	show_items()
-	set_slider_max()
+	if idx ~= nil then 
+		table.remove(lola_variables.wishes, wish_start_index + idx - 1)
+		show_items()
+		set_slider_max()
+	else
+		idx = tonumber(self:GetName():match('lolaloot_(%d+)_'))		
+		if idx ~= nil then 
+			table.remove(lola_variables.loot, loot_start_index + idx - 1)
+			show_loot()
+			set_loot_slider_max()
+		end
+	end
 end
 
 local function load_variables()
@@ -128,10 +205,50 @@ local function load_variables()
 		lola_variables.wishes = {}
 	end
 
+	if lola_variables.loot == nil then
+		lola_variables.loot = {}
+	end
 	show_items()
 	set_slider_max()
+
+	show_loot()
+	set_loot_slider_max()
 end
 
+-- -----------------------------------------------------------------
+local function add_loot( message )
+	local itemNum = tonumber(string.match(message,"item:(%d+):"))	
+
+	if itemNum ~= nil then
+		local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice= GetItemInfo(itemNum)
+		if name~=nil then
+			local found = false
+			for i=1,#lola_variables.loot do
+				if lola_variables.loot[i]['id'] == itemNum then
+					lola_variables.loot[i]['count'] = lola_variables.loot[i]['count'] + 1
+					found = true
+					break
+				end
+			end
+			if found == false then 
+				item = {}
+				item["count"] = 1
+				item["id"] = itemNum
+
+				table.insert(lola_variables.loot, item)
+				if #lola_variables.loot > max_lines then
+					lola_looted.slider:SetMinMaxValues(1, #lola_variables.loot- max_lines + 1)
+					loot_start_index = #lola_variables.loot - max_lines + 1
+				else
+					lola_looted.slider:SetMinMaxValues(1, 1)
+					loot_start_index = 1
+				end
+				lola_looted.slider:SetValue(loot_start_index)
+			end
+			show_loot()
+		end
+	end
+end
 -- -----------------------------------------------------------------
 function lola_texture_OnEnter(self, motion)
 	if self.link then
@@ -154,6 +271,8 @@ function lola_OnEvent(self, event, ...)
 
 	elseif event == "VARIABLES_LOADED" then
 		load_variables()
+	elseif event == "CHAT_MSG_LOOT" then
+		add_loot(...)
 	end
 end
 
@@ -168,23 +287,27 @@ end
 -----------------------------------------------------------------------
 function lola_onLoad()
 	print("Loot Alert loaded")
-	-- table.insert(lola_variables.wishes,"Wunsch 1")
-
+	
 	for i = 1, max_lines do
-		local le = CreateFrame("Frame", "lolawish_" .. i, lolascrollframe, "ListElementTemplate")
+		local wish = CreateFrame("Frame", "lolawish_" .. i, lola_wish_frame.main, "ListElementTemplate")
+		local loot = CreateFrame("Frame", "lolaloot_" .. i, lola_looted.main, "ListElementTemplate")		                                                    
 
-		table.insert(listframes, le)
+		table.insert(listframes, wish)
+		table.insert(listlootedframes, loot)
 		if i == 1 then
-			le:SetPoint("TOPLEFT", 4, -4)
+			wish:SetPoint("TOPLEFT", 4, -4)
+			loot:SetPoint("TOPLEFT", 4, -4)
 		else
-			le:SetPoint("TOPLEFT", listframes[i - 1], "BOTTOMLEFT", 0, 0)
+			wish:SetPoint("TOPLEFT", listframes[i - 1], "BOTTOMLEFT", 0, 0)
+			loot:SetPoint("TOPLEFT", listlootedframes[i - 1], "BOTTOMLEFT", 0, 0)
 		end
+		loot:Hide()
 	end
-
 
 	LoLaMain:RegisterEvent("PLAYER_ENTERING_WORLD")
 	LoLaMain:RegisterEvent("VARIABLES_LOADED")
-
+	LoLaMain:RegisterEvent("CHAT_MSG_LOOT")
+	
 	SLASH_LOOTALERT1 = "/lola"
 	SlashCmdList["LOOTALERT"] = lola_SlashCommand
 end
@@ -218,6 +341,11 @@ function lola_slider_onload(self)
 end
 
 function lola_slider_onValueChanged(self)
-	start_index = self:GetValue()
-	show_items()
+	if self:GetName()=="lola_wish_frame_vslider"  then
+		wish_start_index = self:GetValue()
+		show_items()
+	else
+		loot_start_index = self:GetValue()
+		show_loot()
+	end
 end
