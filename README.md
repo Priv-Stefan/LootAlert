@@ -6,9 +6,11 @@ This Addon is a small list of items you may want to roll for when in a raid, e.g
 
 ![LootAlert](lootalert.png)
 
-Later versions may show an alert, if a wished item was looted.
+The lower list shows the already looted items, therfore, there is an overview, which items have been looted during a raid.
 
-Items are added by entering the item name or part of the item name into the input field in the left right corner, e.g. "Gruftm". You can use the item name in your WoW® language. It is recommendend, to click the "Scan" once, WoW® was started. This loads all items starting with  id 40000 in an array. That allows to search for items, which have not yet seen by the char.
+Future versions may show an alert, if a wished item was looted.
+
+Items are added by entering the item name or part of the item name into the input field in the left right corner, e.g. "Gruftm". You can use the item name in your WoW® language. It is recommendend, to click the "Scan" once, WoW® was started. This loads all epic+ items starting with id 40000 in an array. That allows to search for items, which have not yet seen by the char.
 
 If an item was not found, the entered item name is written into the textbox with a leading "nf " text.
 
