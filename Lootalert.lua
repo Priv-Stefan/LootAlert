@@ -262,6 +262,15 @@ local function add_loot( message )
 		end
 	end
 end
+
+local function warn_loot( message )
+	local itemNum = tonumber(string.match(message,"item:(%d+):"))
+
+	if itemNum ~= nil then
+		local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice= GetItemInfo(itemNum)
+		debug("Roll ", name)
+	end
+end
 -- -----------------------------------------------------------------
 function lola_texture_OnEnter(self, motion)
 	
@@ -276,13 +285,13 @@ function lola_texture_OnEnter(self, motion)
 		local comp1 = nil
 		local comp2 = nil
 		local comp3 = nil
-		if ShoppingTooltip1:SetHyperlinkCompareItem(link,1,1,GameTooltip) then
+		if ShoppingTooltip1:SetHyperlinkCompareItem(link,1) then
 			comp1 = true
 		end
-		if ShoppingTooltip2:SetHyperlinkCompareItem(link,2,1,GameTooltip) then
+		if ShoppingTooltip2:SetHyperlinkCompareItem(link,2) then
 			comp2 = true
 		end
-		if ShoppingTooltip3:SetHyperlinkCompareItem(link,3,1,GameTooltip) then
+		if ShoppingTooltip3:SetHyperlinkCompareItem(link,3) then
 			comp3 = true
 		end		
 		GameTooltip:Show()
@@ -326,6 +335,8 @@ function lola_OnEvent(self, event, ...)
 		load_variables()
 	elseif event == "CHAT_MSG_LOOT" then
 		add_loot(...)
+	elseif event == "RAID_WARNING" then
+		warn_loot(...)
 	end
 end
 
@@ -340,6 +351,7 @@ end
 -----------------------------------------------------------------------
 function lola_onLoad()
 	print("Loot Alert loaded")
+
 	
 	for i = 1, max_lines do
 		local wish = CreateFrame("Frame", "lolawish_" .. i, lola_wish_frame.main, "ListElementTemplate")
@@ -360,6 +372,7 @@ function lola_onLoad()
 	LoLaMain:RegisterEvent("PLAYER_ENTERING_WORLD")
 	LoLaMain:RegisterEvent("VARIABLES_LOADED")
 	LoLaMain:RegisterEvent("CHAT_MSG_LOOT")
+	LoLaMain:RegisterEvent("RAID_WARNING")
 	
 	SLASH_LOOTALERT1 = "/lola"
 	SlashCmdList["LOOTALERT"] = lola_SlashCommand
