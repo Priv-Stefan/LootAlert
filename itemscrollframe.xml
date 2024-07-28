@@ -21,6 +21,18 @@
                     <Anchor point="LEFT" relativePoint="LEFT"></Anchor>
                 </Anchors>
             </Frame>
+            <Frame name="le_dummy">
+                <Size x="20" y="20" />
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset x="4" y="0" />
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnEnter function="lola_texture_OnEnter" />
+                    <OnLeave function="lola_texture_OnLeave" />
+                </Scripts>
+            </Frame>            
         </Frames>
         <Layers>
             <Layer level="BACKGROUND" setAllPoints="true">
@@ -54,10 +66,7 @@
                 </FontString>
             </Layer>
         </Layers>
-        <Scripts>
-            <OnEnter function="lola_texture_OnEnter" />
-            <OnLeave function="lola_texture_OnLeave" />
-        </Scripts>
+
     </Frame>
 
     <Frame name="ItemScrollFrameTemplate" virtual="true">

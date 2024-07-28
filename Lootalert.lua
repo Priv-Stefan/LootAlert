@@ -22,6 +22,14 @@ local function debug(...)
 	end
 end
 
+local function sort_comp(a,b)	
+	local name1,name2, link, quality, iLevel, reqLevel, class, subclass,maxStack, equipSlot, texture, vendorPrice 
+	name1, link, quality, iLevel, reqLevel, class, subclass,	maxStack, equipSlot, texture, vendorPrice = GetItemInfo(a['itemid'])
+	name2, link, quality, iLevel, reqLevel, class, subclass,	maxStack, equipSlot, texture, vendorPrice = GetItemInfo(b['itemid'])
+
+	return name1 < name2
+end
+
 local function set_slider_max()
 	if #lola_variables.wishes > max_lines then
 		lola_wish_frame.slider:SetMinMaxValues(1, #lola_variables.wishes - max_lines + 1)
@@ -162,6 +170,8 @@ function lola_btnAdd_click(arg1)
 		local w = {}
 		w['itemid'] = itemNum
 		table.insert(lola_variables.wishes, w)
+		table.sort(lola_variables.wishes,sort_comp)
+
 		if #lola_variables.wishes > max_lines then
 			set_slider_max()
 			wish_start_index = #lola_variables.wishes - max_lines + 1
@@ -222,6 +232,9 @@ local function add_loot( message )
 	if itemNum ~= nil then
 		local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice= GetItemInfo(itemNum)
 		if name~=nil then
+			if quality < 4 then
+				return
+			end
 			local found = false
 			for i=1,#lola_variables.loot do
 				if lola_variables.loot[i]['id'] == itemNum then
@@ -251,10 +264,50 @@ local function add_loot( message )
 end
 -- -----------------------------------------------------------------
 function lola_texture_OnEnter(self, motion)
-	if self.link then
+	
+	local link = self:GetParent().link
+	if link then
 		GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
-		GameTooltip:SetHyperlink(self.link)
+		GameTooltip:SetHyperlink(link)
+		ShoppingTooltip1:SetOwner(GameTooltip, "ANCHOR_NONE");
+		ShoppingTooltip2:SetOwner(GameTooltip, "ANCHOR_NONE");
+		ShoppingTooltip3:SetOwner(GameTooltip, "ANCHOR_NONE");
+
+		local comp1 = nil
+		local comp2 = nil
+		local comp3 = nil
+		if ShoppingTooltip1:SetHyperlinkCompareItem(link,1,1,GameTooltip) then
+			comp1 = true
+		end
+		if ShoppingTooltip2:SetHyperlinkCompareItem(link,2,1,GameTooltip) then
+			comp2 = true
+		end
+		if ShoppingTooltip3:SetHyperlinkCompareItem(link,3,1,GameTooltip) then
+			comp3 = true
+		end		
 		GameTooltip:Show()
+
+		local left, right, anchor1, anchor2 = GameTooltip:GetLeft(), GameTooltip:GetRight(), "TOPLEFT", "TOPRIGHT";
+		if comp1 then
+			ShoppingTooltip1:ClearAllPoints();
+			ShoppingTooltip1:SetPoint(anchor1, GameTooltip, anchor2, 0, -10);
+			ShoppingTooltip1:Show();
+		end
+		if comp2 then
+			ShoppingTooltip2:ClearAllPoints();
+			if comp1 then
+				ShoppingTooltip2:SetPoint(anchor1, ShoppingTooltip1, anchor2, 0, -10);
+			else
+				ShoppingTooltip2:SetPoint(anchor1, GameTooltip, anchor2, 0, -10);
+			end
+			ShoppingTooltip2:Show();
+		end
+		if comp3 then
+			ShoppingTooltip3:ClearAllPoints();
+			ShoppingTooltip3:SetPoint(anchor1, GameTooltip, anchor2, 0, -10);
+			ShoppingTooltip3:Show();
+		end
+
 	end
 end
 
