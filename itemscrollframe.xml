@@ -35,11 +35,18 @@
             </Frame>            
         </Frames>
         <Layers>
-            <Layer level="BACKGROUND" setAllPoints="true">
-                <Texture name="$parentbackIcon" parentKey="icon">
+
+            <!-- <Layer level="BACKGROUND" setAllPoints="true">
+                <Texture name="$parentbackIcon" parentKey="background">
                     <Color r="0.0" g="0.0" b="0.0" a="1.0" />
                 </Texture>
+            </Layer> -->
+            <Layer level="BACKGROUND" setAllPoints="true" >
+                <Texture name="$parentb2" parentKey="background2" hidden="true">
+                    <Color r="0.0" g="1.0" b="0.0" a="0.5" />
+                </Texture>
             </Layer>
+
             <Layer level="BORDER">
                 <Texture name="$parent_Icon" parentKey="itemtexture" parent="$parent">
                     <Size x="20" y="20" />
