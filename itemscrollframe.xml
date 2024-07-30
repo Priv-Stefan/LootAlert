@@ -1,6 +1,6 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     
-    <Frame name="ListElementTemplate" virtual="true">
+    <Button name="ListElementTemplate" virtual="true">
         <Size x="240" y="25" />
         <Frames>
             <Button name="$parent_btnDel" inherits="UIPanelButtonTemplate" parentkey="btnDel"
@@ -60,21 +60,34 @@
 
             <Layer level="BORDER">
                 <FontString name="$parent_item" parentKey="item" inherits="SystemFont_Shadow_Small"
-                    text="" maxLines="2" nonspacewrap="true" justifyH="LEFT">
-                    <Size x="150" y="20" />
+                    text="" maxLines="1" nonspacewrap="true" justifyH="LEFT">
+                    <Size x="150" y="10" />
                     <Anchors>
-                        <Anchor point="LEFT" relativeto="$parent_Icon" relativepoint="RIGHT">
-                            <Offset x="4" y="0" />
+                        <Anchor point="LEFT" relativeto="$parent_Icon" relativepoint="TOPRIGHT">
+                            <Offset x="4" y="-6" />
                         </Anchor>
                         <Anchor point="RIGHT" relativeto="$parent_btnDel" relativepoint="LEFT">
                             <Offset x="4" y="0" />
                         </Anchor>
                     </Anchors>
                 </FontString>
+                <FontString name="$parent_qual" parentKey="quality" inherits="SystemFont_Shadow_Small"
+                    text="" maxLines="1" nonspacewrap="true" justifyH="LEFT">
+                    <Size x="150" y="8" />
+                    <Color r="0.0"  g="1.0" b="0.0"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativeto="$parent_item" relativepoint="BOTTOMLEFT">
+                            <Offset x="0" y="-1" />
+                        </Anchor>
+                    </Anchors>
+                </FontString>
             </Layer>
         </Layers>
+        <Scripts>
+            <OnClick function="lola_le_OnClick" />            
+        </Scripts>
 
-    </Frame>
+    </Button>
 
     <Frame name="ItemScrollFrameTemplate" virtual="true">
         <Size x="275" y="235" />
@@ -116,6 +129,31 @@
             </Frame>
 
             <Slider name="$parent_vslider" parentkey="slider"
+                orientation="VERTICAL" inherits="UIPanelScrollBarTemplate">
+                <Size x="25" y="25" />
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeto="$parent_itemarea">
+                        <Offset>
+                            <AbsDimension x="0" y="-25" />
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT"
+                        relativeTo="$parent_itemarea">
+                        <Offset>
+                            <AbsDimension x="0" y="25" />
+                        </Offset>
+
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad function="lola_slider_onload" />
+                    <OnValueChanged function="lola_slider_onValueChanged" />
+                </Scripts>
+            </Slider>
+
+
+
+            <!-- <Slider name="$parent_vslider" parentkey="slider"
                 orientation="VERTICAL">
                 <Size x="25" y="25" />
                 <Anchors>
@@ -144,7 +182,7 @@
                     file="Interface\Buttons\UI-ScrollBar-Knob">
                     <Size x="25" y="25" />
                 </ThumbTexture>
-            </Slider>
-        </Frames>
+            </Slider> -->
+        </Frames> 
     </Frame>
 </Ui>

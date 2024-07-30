@@ -24,10 +24,10 @@ end
 
 local function sort_comp(a,b)	
 	local name1,name2, link, quality, iLevel, reqLevel, class, subclass,maxStack, equipSlot, texture, vendorPrice 
-	name1, link, quality, iLevel, reqLevel, class, subclass,	maxStack, equipSlot, texture, vendorPrice = GetItemInfo(a['id'])
-	name2, link, quality, iLevel, reqLevel, class, subclass,	maxStack, equipSlot, texture, vendorPrice = GetItemInfo(b['id'])
+	name1, link, quality, iLevel1, reqLevel, class, subclass,	maxStack, equipSlot, texture, vendorPrice = GetItemInfo(a['id'])
+	name2, link, quality, iLevel2, reqLevel, class, subclass,	maxStack, equipSlot, texture, vendorPrice = GetItemInfo(b['id'])
 
-	return name1 < name2
+	return name1 ..iLevel1 <  name2 .. iLevel2
 end
 
 local function set_slider_max()
@@ -103,6 +103,13 @@ local function show_loot()
 			else
 				listlootedframes[i].background2:Hide()
 			end
+			listlootedframes[i].quality:SetText("Item Level : " .. iLevel)
+
+			-- if iLevel >= 264 then
+			-- 	listlootedframes[i].quality:SetText("H") 
+			-- else
+			-- 	listlootedframes[i].quality:SetText("")
+			-- end
 		else
 			listlootedframes[i].item:SetText("")
 			listlootedframes[i].itemtexture:Hide()
@@ -133,6 +140,13 @@ local function show_items()
 			else
 				listframes[i].background2:Hide()
 			end
+			listframes[i].quality:SetText("Item Level: " .. iLevel)
+			-- if iLevel >= 264 then
+			-- 	listframes[i].quality:SetText("Heroic")
+			-- else
+			-- 	listframes[i].quality:SetText()
+			-- end
+
 		else
 			listframes[i].item:SetText("")
 			listframes[i].itemtexture:Hide()
@@ -205,14 +219,13 @@ local function scan()
 	else
 		lola_looted.slider:SetMinMaxValues(1, 1)
 	end
-
 	show_loot()
 	debug("Scanning done")
 end
 
 
 -- ----------------------------------------------------
--- Add item to the wishlist 
+-- Add items to the wishlist 
 function lola_btnAdd_click(arg1)
 	local itemname = edtWish:GetText()
 	local name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice
@@ -225,21 +238,30 @@ function lola_btnAdd_click(arg1)
 			itemname)
 	end
 
+	local found = false
 	if name == nil then
 		for i = 1, #itemdb do
 			if string.find(itemdb[i]['name'], itemname) then
-				name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice =
-					GetItemInfo(itemdb[i]['id'])
-				break;
+				name, link, quality, iLevel, reqLevel, class, subclass, maxStack, equipSlot, texture, vendorPrice =	GetItemInfo(itemdb[i]['id'])
+
+				if name ~= nil then
+					local itemNum = tonumber(link:match("|Hitem:(%d+):"))		
+					local w = {}
+					w['id'] = itemNum
+					table.insert(lola_variables.wishes, w)
+					found = true
+				end			
 			end
 		end
 	end
 
-	if name ~= nil then
-		local itemNum = tonumber(link:match("|Hitem:(%d+):"))		
-		local w = {}
-		w['id'] = itemNum
-		table.insert(lola_variables.wishes, w)
+	if found then
+		table.sort(lola_variables.wishes,sort_comp)
+
+		-- local itemNum = tonumber(link:match("|Hitem:(%d+):"))		
+		-- local w = {}
+		-- w['id'] = itemNum
+		-- table.insert(lola_variables.wishes, w)
 		table.sort(lola_variables.wishes,sort_comp)
 
 		if #lola_variables.wishes > max_lines then
@@ -274,10 +296,22 @@ function lola_btnDel_click(self)
 	end
 end
 
+-- -----------------------------------------------------------------------
 function lola_btnscan_click()
 	scan()
 end
 
+-- -----------------------------------------------------------------------
+-- Test for future use
+function lola_le_OnClick(self)
+	local idx = tonumber(self:GetName():match('lolawish_(%d+)'))
+	if idx ~= nil then 
+		name =GetItemInfo(lola_variables.wishes[ wish_start_index + idx - 1]['id'])
+		debug(name)
+	end
+end
+
+-- -----------------------------------------------------------------------
 local function warn_loot( message )
 	local itemNum = tonumber(string.match(message,"item:(%d+):"))
 	
@@ -409,8 +443,8 @@ function lola_onLoad()
 	print("|cff5555ffLoot Alert|r")	
 	
 	for i = 1, max_lines do
-		local wish = CreateFrame("Frame", "lolawish_" .. i, lola_wish_frame.main, "ListElementTemplate")
-		local loot = CreateFrame("Frame", "lolaloot_" .. i, lola_looted.main, "ListElementTemplate")		                                                    
+		local wish = CreateFrame("Button", "lolawish_" .. i, lola_wish_frame.main, "ListElementTemplate")
+		local loot = CreateFrame("Button", "lolaloot_" .. i, lola_looted.main, "ListElementTemplate")		                                                    
 
 		table.insert(listframes, wish)
 		table.insert(listlootedframes, loot)

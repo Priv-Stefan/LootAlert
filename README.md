@@ -22,6 +22,8 @@ If a raid warning contains the link of one of the items in the wishlist an alert
 
 (That was the idea behind "lootAlert".)
 
+If items exist as non heroic and heroic, both will be added to the wish list. The unwanted one can be deleted. I found no method ro determine, whether an item is non or heroic.
+
 This little addon is still under devlopement. 
 
 If the addon was closed, simply enter "/lola" in the chat to reopen the addon window.
@@ -33,6 +35,4 @@ Download LootAlert.zip. Change in `Interface/AddOns` directory and unzip the fil
 
 Use on your own risk.
 
-## Open issues
-When adding and item, it is not clear, whether it is heroic nor normal. Need to save both item Ids: normal and heroic. 
 

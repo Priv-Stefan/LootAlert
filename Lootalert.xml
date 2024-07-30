@@ -98,6 +98,26 @@
                     </Anchor>
                 </Anchors>
             </Frame>
+
+            <!-- <Button name="lola_loot_tab" inherits="CharacterFrameTabButtonTemplate" text="Loot">
+                <Anchors>
+                    <Anchor point="TOP" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension x="-80" y="0" />
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="lola_Db_tab" inherits="CharacterFrameTabButtonTemplate" text="Item DB">
+                <Anchors>
+                    <Anchor point="TOP" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension x="80" y="0" />
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button> -->
+
         </Frames>
 
         <Layers>
